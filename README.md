@@ -56,12 +56,12 @@ import { CumulativeDensityFilter } from "@contractrabbit/ui"
 An interactive chart component that displays a cumulative distribution with a draggable threshold for filtering numeric data.
 
 **Features:**
-- 📊 Smooth cumulative distribution visualization
-- 🎯 Draggable threshold with real-time updates
-- 📈 Support for logarithmic and linear scales
-- 🎨 Customizable colors and styling
-- 📱 Fully responsive
-- ⚡ Optimized performance
+- Smooth cumulative distribution visualization
+- Draggable threshold with real-time updates
+- Support for logarithmic and linear scales
+- Customizable colors and styling
+- Fully responsive
+- Optimized performance
 
 **Example:**
 
