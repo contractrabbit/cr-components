@@ -474,7 +474,7 @@ export function CumulativeDensityFilter({
 
       {/* Value display (non-interactive to avoid blocking nearby controls) */}
       <div className="absolute bottom-0 left-0 right-0 flex justify-between text-xs text-muted-foreground px-1 pointer-events-none">
-        <span>{formatNumberWithSuffix(minValue, 2)}</span>
+        <span></span>
         <span className="font-medium text-foreground">
           {filterMode === 'lt' && '< '}
           {filterMode === 'lte' && '≤ '}
@@ -482,7 +482,7 @@ export function CumulativeDensityFilter({
           {filterMode === 'gte' && '≥ '}
           {formatNumberWithSuffix(threshold, 2)}
         </span>
-        <span>{formatNumberWithSuffix(maxValue, 2)}</span>
+        <span></span>
       </div>
     </div>
   );
