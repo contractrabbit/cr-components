@@ -7,14 +7,14 @@ import { ThemeToggle } from "@contractrabbit/ui"
 import { RefreshCw } from "lucide-react"
 
 export default function Page() {
-  const [threshold, setThreshold] = useState<number>(50)
+  const [threshold, setThreshold] = useState<number>(50_000_000)
   const [count, setCount] = useState<number>(0)
   const [filterMode, setFilterMode] = useState<'lt' | 'lte' | 'gt' | 'gte'>('lte')
   const [logScale, setLogScale] = useState<boolean>(false)
   const [xAxisTicks, setXAxisTicks] = useState<number | undefined>(undefined)
 
   // Mock data generator and state (only changes via button)
-  const generateData = () => Array.from({ length: 200 }, () => Math.random() * 100)
+  const generateData = () => Array.from({ length: 200 }, () => Math.random() * 100_000_000)
   const [data, setData] = useState<number[]>(() => generateData())
 
   const handleThresholdChange = (newThreshold: number, newCount: number) => {
@@ -138,7 +138,7 @@ export default function Page() {
 
                 <CumulativeDensityFilter
                   values={data}
-                  initialThreshold={50}
+                  initialThreshold={50_000_000}
                   filterMode={filterMode}
                   logScale={logScale}
                   xAxisTicks={xAxisTicks}
@@ -188,8 +188,8 @@ export default function Page() {
             <h2 className="text-lg font-semibold mb-4">
               All Filter Modes (Compact)
             </h2>
-            <div className="grid grid-cols-2 gap-4">
-              <div>
+            <div className="flex gap-4 flex-wrap">
+              <div className="flex-1 min-w-[200px]">
                 <h3 className="text-xs font-medium text-muted-foreground mb-2">Less Than or Equal (≤)</h3>
                 <CumulativeDensityFilter
                   values={data}
@@ -202,8 +202,8 @@ export default function Page() {
                   className="border rounded p-3 bg-muted/30"
                 />
               </div>
-              <div>
-                <h3 className="text-xs font-medium text-muted-foreground mb-2">Greater Than (&gt;)</h3>
+              <div className="w-[200px]">
+                <h3 className="text-xs font-medium text-muted-foreground mb-2">Greater Than (&gt;) - 200px wide</h3>
                 <CumulativeDensityFilter
                   values={data}
                   initialThreshold={threshold}

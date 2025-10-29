@@ -56,7 +56,7 @@ describe('computeTicks', () => {
     const ticks = computeTicks(0, 100, false, 200, 5)
     expect(ticks!.length).toBe(5)
     expect(ticks![0]).toBe(0)
-    expect(Math.round(ticks![4])).toBe(100)
+    expect(Math.round(ticks![4]!)).toBe(100)
   })
 })
 
