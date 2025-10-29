@@ -203,7 +203,6 @@ export function CumulativeDensityFilter({
 
     if (sorted.length <= 50) {
       // Plot actual data points for small datasets
-      data.push({ value: min, count: 0 });
       sorted.forEach((value, index) => {
         data.push({
           value: value,
