@@ -12,10 +12,11 @@ export default function Page() {
   const [filterMode, setFilterMode] = useState<'lt' | 'lte' | 'gt' | 'gte'>('lte')
   const [logScale, setLogScale] = useState<boolean>(false)
   const [xAxisTicks, setXAxisTicks] = useState<number | undefined>(undefined)
+  const [dataPointsCount, setDataPointsCount] = useState<number>(200)
 
   // Mock data generator and state (only changes via button)
-  const generateData = () => Array.from({ length: 200 }, () => Math.random() * 100_000_000)
-  const [data, setData] = useState<number[]>(() => generateData())
+  const generateData = (count: number = dataPointsCount) => Array.from({ length: count }, () => Math.random() * 100_000_000)
+  const [data, setData] = useState<number[]>(() => generateData(200))
 
   const handleThresholdChange = (newThreshold: number, newCount: number) => {
     setThreshold(newThreshold)
@@ -46,17 +47,33 @@ export default function Page() {
             </p>
 
             <div className="space-y-6">
-              {/* Regenerate mock data */}
-              <div className="flex items-center justify-between">
-                <div className="text-sm text-muted-foreground">Mock data controls</div>
-                <Button
-                  variant="outline"
-                  size="sm"
-                  onClick={() => setData(generateData())}
-                >
-                  <RefreshCw className="h-4 w-4 mr-2" />
-                  Regenerate mock data
-                </Button>
+              {/* Mock data controls */}
+              <div>
+                <div className="text-sm font-semibold mb-3">Mock data controls</div>
+                <div className="flex items-center gap-4 flex-wrap">
+                  <div className="flex items-center gap-2">
+                    <label htmlFor="dataPoints" className="text-sm font-medium whitespace-nowrap">
+                      Data points:
+                    </label>
+                    <input
+                      id="dataPoints"
+                      type="number"
+                      min="3"
+                      max="1000"
+                      value={dataPointsCount}
+                      onChange={(e) => setDataPointsCount(Math.max(3, Math.min(1000, parseInt(e.target.value) || 200)))}
+                      className="w-20 px-2 py-1 text-sm border rounded"
+                    />
+                  </div>
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={() => setData(generateData(dataPointsCount))}
+                  >
+                    <RefreshCw className="h-4 w-4 mr-2" />
+                    Regenerate mock data
+                  </Button>
+                </div>
               </div>
               {/* Filter Mode Toggle */}
               <div>
