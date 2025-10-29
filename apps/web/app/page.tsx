@@ -229,7 +229,7 @@ export default function Page() {
                   thresholdColor="#ef4444"
                   onThresholdChange={handleThresholdChange}
                   height={150}
-                  className="border rounded p-3 bg-muted/30"
+                  className="border rounded px-0 py-3 bg-muted/30"
                 />
               </div>
             </div>

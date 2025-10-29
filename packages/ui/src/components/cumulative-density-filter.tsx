@@ -112,7 +112,7 @@ function ThresholdLabel({ viewBox, count, total, thresholdColor, onMouseDown, sh
           width="28"
           height="24"
           fill={thresholdColor}
-          stroke="var(--background)"
+          stroke="var(--background, #ffffff)"
           strokeWidth="2"
           rx="4"
           style={{ pointerEvents: 'none' }}
@@ -355,10 +355,10 @@ export function CumulativeDensityFilter({
           >
             <defs>
               <linearGradient id="colorCount" x1="0" y1="0" x2="0" y2="1">
-                <stop offset="5%" stopColor="var(--primary)" stopOpacity={0.3} />
-                <stop offset="95%" stopColor="var(--primary)" stopOpacity={0.05} />
+                <stop offset="5%" stopColor="var(--primary, #3b82f6)" stopOpacity={0.3} />
+                <stop offset="95%" stopColor="var(--primary, #3b82f6)" stopOpacity={0.05} />
               </linearGradient>
-              
+
               {/* Gradient mask based on filter mode */}
               <linearGradient id="fillMask" x1="0%" y1="0" x2="100%" y2="0">
                 {(filterMode === 'lt' || filterMode === 'lte') ? (
@@ -377,13 +377,13 @@ export function CumulativeDensityFilter({
                   </>
                 )}
               </linearGradient>
-              
+
               {/* Combined gradient */}
               <linearGradient id="maskedFill" x1="0" y1="0" x2="0" y2="1">
-                <stop offset="5%" stopColor="var(--primary)" stopOpacity={0.3} />
-                <stop offset="95%" stopColor="var(--primary)" stopOpacity={0.05} />
+                <stop offset="5%" stopColor="var(--primary, #3b82f6)" stopOpacity={0.3} />
+                <stop offset="95%" stopColor="var(--primary, #3b82f6)" stopOpacity={0.05} />
               </linearGradient>
-              
+
               <mask id="thresholdMask">
                 <rect x="0" y="0" width="100%" height="100%" fill="url(#fillMask)" />
               </mask>
@@ -403,7 +403,7 @@ export function CumulativeDensityFilter({
               tick={{ fill: '#6b7280', fontSize: 12 }}
             />
             <Tooltip
-              cursor={{ stroke: 'var(--muted-foreground)', strokeDasharray: 4 }}
+              cursor={{ stroke: 'var(--muted-foreground, #9ca3af)', strokeDasharray: 4 }}
               content={renderTooltip ?? (({ active, payload, label }) => {
                 if (!active || !payload || payload.length === 0) return null;
                 const first = payload[0];
@@ -414,9 +414,9 @@ export function CumulativeDensityFilter({
                   <div
                     className="rounded-md shadow-sm"
                     style={{
-                      background: 'var(--popover)',
-                      border: '1px solid var(--border)',
-                      color: 'var(--popover-foreground)',
+                      background: 'var(--popover, #ffffff)',
+                      border: '1px solid var(--border, #e5e7eb)',
+                      color: 'var(--popover-foreground, #000000)',
                       padding: '8px 10px',
                       fontSize: 12,
                     }}
@@ -444,7 +444,7 @@ export function CumulativeDensityFilter({
             <Area
               type="monotone"
               dataKey="count"
-              stroke="var(--primary)"
+              stroke="var(--primary, #3b82f6)"
               strokeWidth={2}
               fill="none"
               isAnimationActive={false}
@@ -453,15 +453,16 @@ export function CumulativeDensityFilter({
             {/* Threshold line using Recharts ReferenceLine for accurate positioning */}
             <ReferenceLine
               x={threshold}
-              stroke={thresholdColor}
+              stroke={thresholdColor || '#ef4444'}
               strokeWidth={2}
               strokeOpacity={0.8}
+              isFront={true}
               label={(props: unknown) => (
                 <ThresholdLabel
                   {...(props as object)}
                   count={currentCount}
                   total={values.length}
-                  thresholdColor={thresholdColor}
+                  thresholdColor={thresholdColor || '#ef4444'}
                   onMouseDown={handleMouseDown}
                   showLabel={showThresholdLabel}
                 />
