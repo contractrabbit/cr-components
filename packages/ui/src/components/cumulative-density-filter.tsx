@@ -27,6 +27,30 @@ import {
   YAxis,
 } from 'recharts';
 
+/**
+ * Formats a number with K, M, B suffixes for readability
+ * @param value - The number to format
+ * @param decimals - Number of decimal places (default: 1)
+ * @returns Formatted string (e.g., "1.5K", "2.3M", "1.2B")
+ */
+function formatNumberWithSuffix(value: number, decimals = 1): string {
+  const abs = Math.abs(value);
+  const sign = value < 0 ? '-' : '';
+
+  if (abs >= 1e9) {
+    return sign + (abs / 1e9).toFixed(decimals) + 'B';
+  }
+  if (abs >= 1e6) {
+    return sign + (abs / 1e6).toFixed(decimals) + 'M';
+  }
+  if (abs >= 1e3) {
+    return sign + (abs / 1e3).toFixed(decimals) + 'K';
+  }
+
+  // For numbers < 1000, show with decimals only if needed
+  return abs % 1 === 0 ? value.toString() : value.toFixed(decimals);
+}
+
 interface ThresholdLabelProps {
   viewBox?: {
     x?: number;
@@ -117,6 +141,8 @@ export interface CumulativeDensityFilterProps {
   showThresholdLabel?: boolean;
   /** Optional custom tooltip renderer. If provided, used as <Tooltip content={renderTooltip} /> */
   renderTooltip?: (ctx: { active?: boolean; payload?: Array<{ value?: unknown }>; label?: string | number }) => ReactNode;
+  /** Format numbers with K, M, B suffixes (default: true) */
+  formatNumbers?: boolean;
   /** Height of the component in pixels */
   height?: number;
   /** Additional CSS classes */
@@ -133,6 +159,7 @@ export function CumulativeDensityFilter({
   onThresholdChange,
   renderTooltip,
   showThresholdLabel = true,
+  formatNumbers = true,
   height = 200,
   className = '',
 }: CumulativeDensityFilterProps) {
@@ -350,7 +377,7 @@ export function CumulativeDensityFilter({
               scale={logScale ? 'log' : 'linear'}
               domain={[minValue, maxValue]}
               ticks={xAxisTickValues}
-              tickFormatter={(value) => value.toFixed(0)}
+              tickFormatter={(value) => formatNumbers ? formatNumberWithSuffix(value, 1) : value.toFixed(0)}
               tick={{ fill: '#6b7280', fontSize: 12 }}
             />
             <YAxis
@@ -362,7 +389,8 @@ export function CumulativeDensityFilter({
                 if (!active || !payload || payload.length === 0) return null;
                 const first = payload[0];
                 const count = Number(first?.value ?? 0);
-                const valueLabel = typeof label === 'number' ? label.toFixed(2) : String(label ?? '');
+                const numericLabel = typeof label === 'number' ? label : Number(label ?? 0);
+                const valueLabel = formatNumbers ? formatNumberWithSuffix(numericLabel, 2) : numericLabel.toFixed(2);
                 return (
                   <div
                     className="rounded-md shadow-sm"
@@ -426,15 +454,15 @@ export function CumulativeDensityFilter({
 
       {/* Value display (non-interactive to avoid blocking nearby controls) */}
       <div className="absolute bottom-0 left-0 right-0 flex justify-between text-xs text-muted-foreground px-1 pointer-events-none">
-        <span>{minValue.toFixed(0)}</span>
+        <span>{formatNumbers ? formatNumberWithSuffix(minValue, 1) : minValue.toFixed(0)}</span>
         <span className="font-medium text-foreground">
           {filterMode === 'lt' && '< '}
           {filterMode === 'lte' && '≤ '}
           {filterMode === 'gt' && '> '}
           {filterMode === 'gte' && '≥ '}
-          {threshold.toFixed(2)}
+          {formatNumbers ? formatNumberWithSuffix(threshold, 2) : threshold.toFixed(2)}
         </span>
-        <span>{maxValue.toFixed(0)}</span>
+        <span>{formatNumbers ? formatNumberWithSuffix(maxValue, 1) : maxValue.toFixed(0)}</span>
       </div>
     </div>
   );
