@@ -198,25 +198,37 @@ export function CumulativeDensityFilter({
       };
     }
 
-    // Create bins for smooth distribution
-    const binCount = Math.min(100, sorted.length);
-    const binSize = (max - min) / binCount;
-    
+    // For small datasets, plot actual data points; for large datasets, create bins
     const data: Array<{ value: number; count: number }> = [];
-    let currentIndex = 0;
-    
-    for (let i = 0; i <= binCount; i++) {
-      const binValue = min + i * binSize;
 
-      // Count all values up to this bin
-      while (currentIndex < sorted.length && sorted[currentIndex]! <= binValue) {
-        currentIndex++;
-      }
-
-      data.push({
-        value: binValue,
-        count: currentIndex,
+    if (sorted.length <= 50) {
+      // Plot actual data points for small datasets
+      data.push({ value: min, count: 0 });
+      sorted.forEach((value, index) => {
+        data.push({
+          value: value,
+          count: index + 1,
+        });
       });
+    } else {
+      // Create bins for smooth distribution on large datasets
+      const binCount = Math.min(100, sorted.length);
+      const binSize = (max - min) / binCount;
+      let currentIndex = 0;
+
+      for (let i = 0; i <= binCount; i++) {
+        const binValue = min + i * binSize;
+
+        // Count all values up to this bin
+        while (currentIndex < sorted.length && sorted[currentIndex]! <= binValue) {
+          currentIndex++;
+        }
+
+        data.push({
+          value: binValue,
+          count: currentIndex,
+        });
+      }
     }
     
     return { chartData: data, minValue: min, maxValue: max, sortedValues: sorted };
