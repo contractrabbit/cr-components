@@ -174,7 +174,20 @@ export function CumulativeDensityFilter({
   const [isDragging, setIsDragging] = useState(false);
   const isDraggingRef = useRef(false);
   const [containerWidth, setContainerWidth] = useState<number>(0);
-  
+
+  // Get primary color - supports both hsl(var(--primary)) and direct color values
+  const primaryColor = useMemo(() => {
+    if (typeof window === 'undefined') return '#3b82f6';
+    const root = getComputedStyle(document.documentElement);
+    const primaryVar = root.getPropertyValue('--primary').trim();
+    // If --primary exists and is in HSL format (e.g., "221.2 83.2% 53.3%")
+    if (primaryVar && primaryVar.match(/[\d.]+\s+[\d.]+%\s+[\d.]+%/)) {
+      return `hsl(${primaryVar})`;
+    }
+    // Fallback to blue
+    return '#3b82f6';
+  }, []);
+
   // Calculate cumulative distribution data
   const { chartData, minValue, maxValue, sortedValues } = useMemo(() => {
     if (!values.length) {
@@ -355,8 +368,8 @@ export function CumulativeDensityFilter({
           >
             <defs>
               <linearGradient id="colorCount" x1="0" y1="0" x2="0" y2="1">
-                <stop offset="5%" stopColor="var(--primary, #3b82f6)" stopOpacity={0.3} />
-                <stop offset="95%" stopColor="var(--primary, #3b82f6)" stopOpacity={0.05} />
+                <stop offset="5%" stopColor={primaryColor} stopOpacity={0.3} />
+                <stop offset="95%" stopColor={primaryColor} stopOpacity={0.05} />
               </linearGradient>
 
               {/* Gradient mask based on filter mode */}
@@ -380,15 +393,15 @@ export function CumulativeDensityFilter({
 
               {/* Combined gradient */}
               <linearGradient id="maskedFill" x1="0" y1="0" x2="0" y2="1">
-                <stop offset="5%" stopColor="var(--primary, #3b82f6)" stopOpacity={0.3} />
-                <stop offset="95%" stopColor="var(--primary, #3b82f6)" stopOpacity={0.05} />
+                <stop offset="5%" stopColor={primaryColor} stopOpacity={0.3} />
+                <stop offset="95%" stopColor={primaryColor} stopOpacity={0.05} />
               </linearGradient>
 
               <mask id="thresholdMask">
                 <rect x="0" y="0" width="100%" height="100%" fill="url(#fillMask)" />
               </mask>
             </defs>
-            <CartesianGrid strokeDasharray="3 3" stroke="#e5e7eb" />
+            <CartesianGrid strokeDasharray="3 3" stroke="var(--border, #e5e7eb)" />
             <XAxis
               dataKey="value"
               type="number"
@@ -401,6 +414,11 @@ export function CumulativeDensityFilter({
             <YAxis
               width={30}
               tick={{ fill: '#6b7280', fontSize: 12 }}
+              tickFormatter={(value) => {
+                const num = Number(value);
+                // Use toPrecision for max 2 significant figures
+                return num >= 100 ? num.toPrecision(2) : num.toString();
+              }}
             />
             <Tooltip
               cursor={{ stroke: 'var(--muted-foreground, #9ca3af)', strokeDasharray: 4 }}
@@ -444,7 +462,7 @@ export function CumulativeDensityFilter({
             <Area
               type="monotone"
               dataKey="count"
-              stroke="var(--primary, #3b82f6)"
+              stroke={primaryColor}
               strokeWidth={2}
               fill="none"
               isAnimationActive={false}
