@@ -174,6 +174,7 @@ export function CumulativeDensityFilter({
   const [isDragging, setIsDragging] = useState(false);
   const isDraggingRef = useRef(false);
   const [containerWidth, setContainerWidth] = useState<number>(0);
+  const [isLoading, setIsLoading] = useState(true);
 
   // Get primary color - supports both hsl(var(--primary)) and direct color values
   const primaryColor = useMemo(() => {
@@ -190,6 +191,7 @@ export function CumulativeDensityFilter({
 
   // Calculate cumulative distribution data
   const { chartData, minValue, maxValue, sortedValues } = useMemo(() => {
+    setIsLoading(true);
     if (!values.length) {
       return { chartData: [], minValue: 0, maxValue: 0, sortedValues: [] as number[] };
     }
@@ -256,6 +258,15 @@ export function CumulativeDensityFilter({
   }, [sortedValues, filterMode]);
 
   const currentCount = useMemo(() => getCountAtThreshold(threshold), [getCountAtThreshold, threshold]);
+
+  // Set loading to false once data is ready
+  useEffect(() => {
+    if (chartData.length > 0) {
+      // Small delay to ensure smooth transition
+      const timer = setTimeout(() => setIsLoading(false), 100);
+      return () => clearTimeout(timer);
+    }
+  }, [chartData]);
 
   // Handle drag
   const handleMouseDown = useCallback((e?: React.MouseEvent) => {
@@ -354,6 +365,17 @@ export function CumulativeDensityFilter({
     return (
       <div className={`flex items-center justify-center ${className}`} style={{ height }}>
         <p className="text-sm text-muted-foreground">No data available</p>
+      </div>
+    );
+  }
+
+  // Show skeleton while loading
+  if (isLoading) {
+    return (
+      <div className={`relative ${className}`} style={{ height }}>
+        <div className="w-full h-full animate-pulse">
+          <div className="h-full bg-gradient-to-r from-gray-200 via-gray-300 to-gray-200 dark:from-gray-700 dark:via-gray-600 dark:to-gray-700 rounded"></div>
+        </div>
       </div>
     );
   }
