@@ -1,0 +1,14 @@
+[
+  {
+    "name": "cumulative-density-filter",
+    "type": "registry:ui",
+    "description": "An interactive chart component that displays a cumulative distribution with a draggable threshold for filtering numeric data.",
+    "dependencies": [
+      "recharts"
+    ],
+    "files": [
+      "components/ui/cumulative-density-filter.tsx",
+      "lib/cumulative-utils.ts"
+    ]
+  }
+]
