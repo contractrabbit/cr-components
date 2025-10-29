@@ -388,6 +388,7 @@ export function CumulativeDensityFilter({
               tick={{ fill: '#6b7280', fontSize: 12 }}
             />
             <YAxis
+              width={30}
               tick={{ fill: '#6b7280', fontSize: 12 }}
             />
             <Tooltip
