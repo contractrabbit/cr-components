@@ -340,7 +340,7 @@ export function CumulativeDensityFilter({
         <ResponsiveContainer width="100%" height="100%">
           <AreaChart
             data={chartData}
-            margin={{ top: 30, right: 10, left: 10, bottom: 5 }}
+            margin={{ top: 30, right: 10, left: 0, bottom: 5 }}
           >
             <defs>
               <linearGradient id="colorCount" x1="0" y1="0" x2="0" y2="1">
