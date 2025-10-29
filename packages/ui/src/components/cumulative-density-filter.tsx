@@ -414,11 +414,7 @@ export function CumulativeDensityFilter({
             <YAxis
               width={30}
               tick={{ fill: '#6b7280', fontSize: 12 }}
-              tickFormatter={(value) => {
-                const num = Number(value);
-                // Use toPrecision for max 2 significant figures
-                return num >= 100 ? num.toPrecision(2) : num.toString();
-              }}
+              tickFormatter={(value) => Math.round(Number(value)).toString()}
             />
             <Tooltip
               cursor={{ stroke: 'var(--muted-foreground, #9ca3af)', strokeDasharray: 4 }}
