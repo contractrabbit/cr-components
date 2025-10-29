@@ -456,7 +456,6 @@ export function CumulativeDensityFilter({
               stroke={thresholdColor || '#ef4444'}
               strokeWidth={2}
               strokeOpacity={0.8}
-              isFront={true}
               label={(props: unknown) => (
                 <ThresholdLabel
                   {...(props as object)}
